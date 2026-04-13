@@ -1,17 +1,17 @@
-# @sentroy-co/client
+# @sentroy-co/sdk
 
 TypeScript SDK for the Sentroy Mail Server API. Zero dependencies, native `fetch`, full type safety.
 
 ## Install
 
 ```bash
-npm install @sentroy-co/client
+npm install @sentroy-co/sdk
 ```
 
 ## Quick Start
 
 ```typescript
-import { SentroyClient } from '@sentroy-co/client';
+import { SentroyClient } from '@sentroy-co/sdk';
 
 const sentroy = new SentroyClient({
   baseUrl: 'https://mail-api.example.com',
@@ -350,7 +350,7 @@ const { data: queue } = await sentroy.health.queue();
 ## Error Handling
 
 ```typescript
-import { SentroyClient, SentroyHttpError } from '@sentroy-co/client';
+import { SentroyClient, SentroyHttpError } from '@sentroy-co/sdk';
 
 try {
   await sentroy.send.single({ /* ... */ });
