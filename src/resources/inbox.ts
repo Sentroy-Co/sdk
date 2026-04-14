@@ -41,8 +41,29 @@ export class Inbox {
     return this.http.post<{ message: string }>(path, undefined);
   }
 
-  async move(uid: number, to: string, from = 'INBOX'): Promise<ApiResponse<{ message: string }>> {
-    return this.http.post<{ message: string }>(`/inbox/${uid}/move`, { from, to });
+  async move(
+    uid: number,
+    to: string,
+    from = 'INBOX',
+    mailbox?: string,
+  ): Promise<ApiResponse<{ message: string }>> {
+    return this.http.post<{ message: string }>(
+      `/inbox/${uid}/move`,
+      { from, to, mailbox },
+    );
+  }
+
+  async toggleFlag(
+    uid: number,
+    mailbox?: string,
+    folder?: string,
+  ): Promise<ApiResponse<{ message: string }>> {
+    const params: Record<string, string> = {};
+    if (mailbox) params.mailbox = mailbox;
+    if (folder) params.folder = folder;
+    const qs = new URLSearchParams(params).toString();
+    const path = qs ? `/inbox/${uid}/flag?${qs}` : `/inbox/${uid}/flag`;
+    return this.http.post<{ message: string }>(path, undefined);
   }
 
   async delete(uid: number, mailbox?: string, folder?: string): Promise<ApiResponse<{ message: string }>> {
