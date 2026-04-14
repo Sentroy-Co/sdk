@@ -49,14 +49,19 @@ export class HttpClient {
     const timer = setTimeout(() => controller.abort(), this.timeout);
 
     try {
+      const hasBody = options?.body !== undefined && options?.body !== null;
+      const headers: Record<string, string> = {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Accept': 'application/json',
+      };
+      if (hasBody) {
+        headers['Content-Type'] = 'application/json';
+      }
+
       const res = await fetch(url, {
         method,
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: options?.body ? JSON.stringify(options.body) : undefined,
+        headers,
+        body: hasBody ? JSON.stringify(options.body) : undefined,
         signal: controller.signal,
       });
 
