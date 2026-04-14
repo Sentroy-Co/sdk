@@ -112,6 +112,7 @@ export interface Attachment {
 export interface SendSingleParams {
   to: string;
   from: string;
+  cc?: string | string[];
   subject: string;
   domainId: string;
   templateId?: string;
@@ -127,6 +128,7 @@ export interface SendSingleParams {
 export interface SendBatchParams {
   recipients: { to: string; variables?: Record<string, string> }[];
   from: string;
+  cc?: string | string[];
   subject: string;
   domainId: string;
   templateId?: string;
