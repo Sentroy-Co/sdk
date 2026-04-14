@@ -1,10 +1,12 @@
 {
   "name": "@sentroy-co/sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TypeScript SDK for Sentroy Mail Server API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build"
@@ -14,6 +16,12 @@
     "typescript": "^5.5.4"
   },
   "peerDependencies": {},
-  "keywords": ["sentroy", "mail", "email", "sdk", "api-client"],
+  "keywords": [
+    "sentroy",
+    "mail",
+    "email",
+    "sdk",
+    "api-client"
+  ],
   "license": "MIT"
 }
