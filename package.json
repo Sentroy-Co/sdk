@@ -1,6 +1,6 @@
 {
   "name": "@sentroy-co/sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "TypeScript SDK for Sentroy Mail Server API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
