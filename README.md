@@ -150,12 +150,24 @@ await sentroy.send.cancel(result.jobId);
 
 ## Inbox (IMAP)
 
+Inbox methods accept two optional scope parameters:
+
+- **`mailbox`** — The email account address (e.g. `inbox@mail.example.com`). Identifies which mailbox account to operate on.
+- **`folder`** — The IMAP folder name (e.g. `INBOX`, `Sent`, `Trash`, `Drafts`). Defaults to `INBOX` when omitted.
+
 ```typescript
-// List messages
+// List messages from INBOX
 const { data: messages, meta } = await sentroy.inbox.list({
+  mailbox: 'inbox@mail.example.com',
   page: 1,
   limit: 20,
   unread: true,
+});
+
+// List messages from Sent folder
+const { data: sent } = await sentroy.inbox.list({
+  mailbox: 'inbox@mail.example.com',
+  folder: 'Sent',
 });
 
 // Read a message (full body, headers, attachments)
@@ -172,16 +184,18 @@ await sentroy.inbox.move(123, 'Trash');
 // Delete
 await sentroy.inbox.delete(123);
 
-// Search
+// Search within a specific folder
 const { data: results } = await sentroy.inbox.search({
+  mailbox: 'inbox@mail.example.com',
+  folder: 'INBOX',
   from: 'sender@example.com',
   subject: 'invoice',
   since: '2025-01-01',
 });
 
-// List mailbox folders
+// List IMAP folders for the account
 const { data: mailboxes } = await sentroy.inbox.listMailboxes();
-// [{ name: "INBOX", totalMessages: 42, unreadMessages: 5 }, ...]
+// [{ name: "INBOX", path: "INBOX", totalMessages: 42, unreadMessages: 5 }, ...]
 
 // Download attachment
 const buffer = await sentroy.inbox.downloadAttachment(123, '1.2');

@@ -215,7 +215,10 @@ export interface Mailbox {
 
 export interface InboxListParams extends PaginationParams {
   unread?: boolean;
+  /** Email account address (e.g. inbox@mail.example.com) */
   mailbox?: string;
+  /** IMAP folder name (e.g. INBOX, Sent, Trash). Defaults to INBOX. */
+  folder?: string;
 }
 
 export interface InboxSearchParams {
@@ -224,7 +227,10 @@ export interface InboxSearchParams {
   subject?: string;
   since?: string;
   before?: string;
+  /** Email account address (e.g. inbox@mail.example.com) */
   mailbox?: string;
+  /** IMAP folder name to search in. Defaults to INBOX. */
+  folder?: string;
 }
 
 // ── Logs ──
