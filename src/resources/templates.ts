@@ -31,7 +31,11 @@ export class Templates {
     return this.http.delete<{ message: string }>(`/templates/${id}`);
   }
 
-  async preview(id: string, variables?: Record<string, string>): Promise<ApiResponse<TemplatePreview>> {
-    return this.http.post<TemplatePreview>(`/templates/${id}/preview`, { variables });
+  async preview(
+    id: string,
+    variables?: Record<string, string>,
+    lang?: string,
+  ): Promise<ApiResponse<TemplatePreview>> {
+    return this.http.post<TemplatePreview>(`/templates/${id}/preview`, { variables, lang });
   }
 }

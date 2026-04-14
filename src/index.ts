@@ -48,3 +48,8 @@ export class SentroyClient {
 // Re-export everything
 export { SentroyHttpError } from './http';
 export * from './types';
+export {
+  resolveLocalized,
+  localizedLanguages,
+  isLocalizedMap,
+} from './helpers/localized';

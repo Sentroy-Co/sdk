@@ -70,12 +70,15 @@ export interface CreateDomainParams {
 
 // ── Template ──
 
+/** Çok dilli metin. `"Hello"` (tek dil) veya `{ en: "Hello", tr: "Merhaba" }` (çok dil) olabilir. */
+export type LocalizedString = string | Record<string, string>;
+
 export interface Template {
   id: string;
-  name: string;
-  subject: string;
-  mjmlBody: string;
-  htmlBody: string;
+  name: LocalizedString;
+  subject: LocalizedString;
+  mjmlBody: LocalizedString;
+  htmlBody: LocalizedString;
   variables: string[];
   domainId: string;
   createdAt: string;
@@ -83,16 +86,16 @@ export interface Template {
 }
 
 export interface CreateTemplateParams {
-  name: string;
-  subject: string;
-  mjmlBody: string;
+  name: LocalizedString;
+  subject: LocalizedString;
+  mjmlBody: LocalizedString;
   domainId: string;
 }
 
 export interface UpdateTemplateParams {
-  name?: string;
-  subject?: string;
-  mjmlBody?: string;
+  name?: LocalizedString;
+  subject?: LocalizedString;
+  mjmlBody?: LocalizedString;
 }
 
 export interface TemplatePreview {
