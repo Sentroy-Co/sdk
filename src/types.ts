@@ -126,6 +126,10 @@ export interface SendSingleParams {
   attachments?: Attachment[];
   scheduledAt?: string;
   headers?: Record<string, string>;
+  /** RFC 5322 — yanit verilen mesajin Message-ID'si */
+  inReplyTo?: string;
+  /** RFC 5322 — thread'deki onceki Message-ID'ler */
+  references?: string[];
 }
 
 export interface SendBatchParams {
@@ -184,6 +188,10 @@ export interface MessageSummary {
   size: number;
   hasAttachments: boolean;
   preview: string;
+  /** RFC 5322 Message-ID */
+  messageId: string | null;
+  /** Yanit verilen mesajin Message-ID'si */
+  inReplyTo: string | null;
 }
 
 export interface MessageDetail {
@@ -200,6 +208,12 @@ export interface MessageDetail {
   htmlBody: string | null;
   attachments: AttachmentInfo[];
   headers: Record<string, string>;
+  /** RFC 5322 Message-ID */
+  messageId: string | null;
+  /** Yanit verilen mesajin Message-ID'si */
+  inReplyTo: string | null;
+  /** Thread'deki onceki Message-ID'lerin tam zinciri */
+  references: string[];
 }
 
 export interface AttachmentInfo {
