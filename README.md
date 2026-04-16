@@ -117,6 +117,22 @@ await sentroy.send.single({
   ],
 });
 
+// Reply to a message (threading)
+await sentroy.send.single({
+  to: 'user@gmail.com',
+  from: 'hello@example.com',
+  subject: 'Re: Project update',
+  html: '<p>Thanks for the update!</p>',
+  domainId: domain.id,
+  inReplyTo: '<original-message-id@mail.example.com>',
+  references: [
+    '<root-message-id@mail.example.com>',
+    '<original-message-id@mail.example.com>',
+  ],
+});
+// Sets RFC 5322 In-Reply-To and References headers
+// All mail clients (Gmail, Outlook, Apple Mail) will display this as a thread
+
 // Schedule for later
 await sentroy.send.single({
   to: 'user@gmail.com',
@@ -163,6 +179,9 @@ const { data: messages, meta } = await sentroy.inbox.list({
   limit: 20,
   unread: true,
 });
+// Each message includes threading fields:
+// messages[0].messageId → "<abc@mail.example.com>"
+// messages[0].inReplyTo → "<parent-id@...>" (null if not a reply)
 
 // List messages from Sent folder
 const { data: sent } = await sentroy.inbox.list({
@@ -170,9 +189,12 @@ const { data: sent } = await sentroy.inbox.list({
   folder: 'Sent',
 });
 
-// Read a message (full body, headers, attachments)
+// Read a message (full body, headers, attachments, threading info)
 const { data: message } = await sentroy.inbox.get(messages[0].uid);
 // message.textBody, message.htmlBody, message.attachments, message.headers
+// message.messageId → "<abc@mail.example.com>" (for threading)
+// message.inReplyTo → "<parent-id@mail.example.com>"
+// message.references → ["<root-id@...>", "<parent-id@...>"]
 
 // Mark as read / unread
 await sentroy.inbox.markAsRead(123);
@@ -197,8 +219,41 @@ const { data: results } = await sentroy.inbox.search({
 const { data: mailboxes } = await sentroy.inbox.listMailboxes();
 // [{ name: "INBOX", path: "INBOX", totalMessages: 42, unreadMessages: 5 }, ...]
 
+// Toggle flagged / starred
+await sentroy.inbox.toggleFlag(123, 'inbox@mail.example.com');
+
+// Get full thread (cross-folder: INBOX + Sent merged)
+const { data: thread } = await sentroy.inbox.getThread(
+  'Project update',           // subject (Re:/Fwd: stripped automatically)
+  'inbox@mail.example.com',
+);
+// Returns all messages in the conversation, chronologically sorted
+// Each message includes a `folder` field ("INBOX" or "Sent")
+// thread[0].from, thread[0].htmlBody, thread[0].folder → "INBOX"
+// thread[1].from, thread[1].htmlBody, thread[1].folder → "Sent"
+
 // Download attachment
 const buffer = await sentroy.inbox.downloadAttachment(123, '1.2');
+```
+
+## Mail Logs
+
+```typescript
+// List logs (filter by status, domain, sender, recipient)
+const { data: logs, meta } = await sentroy.logs.list({
+  status: 'bounced',
+  domainId: domain.id,
+  from: 'hello@example.com',
+  to: 'user@gmail.com',
+  page: 1,
+  limit: 50,
+});
+// logs[0].status → "bounced"
+// logs[0].messageId → "<abc@mail.example.com>"
+// logs[0].sentAt, .bouncedAt, .openedAt, .clickedAt
+
+// Get a single log entry
+const { data: log } = await sentroy.logs.get(logs[0].id);
 ```
 
 ## Webhooks
