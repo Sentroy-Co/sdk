@@ -97,6 +97,19 @@ export class Inbox {
     return this.http.get<MessageSummary[]>('/inbox/search', params as any);
   }
 
+  /** Thread mesajlari — INBOX + Sent cross-search ile tam sohbet doner. */
+  async getThread(
+    subject: string,
+    mailbox?: string,
+  ): Promise<ApiResponse<(MessageDetail & { folder: string })[]>> {
+    const params: Record<string, string> = { subject };
+    if (mailbox) params.mailbox = mailbox;
+    return this.http.get<(MessageDetail & { folder: string })[]>(
+      '/inbox/thread',
+      params,
+    );
+  }
+
   async listMailboxes(): Promise<ApiResponse<Mailbox[]>> {
     return this.http.get<Mailbox[]>('/inbox/mailboxes');
   }
