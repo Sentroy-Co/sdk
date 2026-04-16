@@ -113,4 +113,40 @@ export class Inbox {
   async listMailboxes(): Promise<ApiResponse<Mailbox[]>> {
     return this.http.get<Mailbox[]>('/inbox/mailboxes');
   }
+
+  // ── Folder CRUD ──
+
+  /** Yeni custom IMAP folder olusturur. */
+  async createFolder(
+    name: string,
+    mailbox?: string,
+  ): Promise<ApiResponse<{ message: string; path: string }>> {
+    return this.http.post<{ message: string; path: string }>('/inbox/folders', {
+      name,
+      mailbox,
+    });
+  }
+
+  /** Mevcut custom folder'i yeniden adlandirir. Sistem klasorleri rename edilemez. */
+  async renameFolder(
+    oldPath: string,
+    newPath: string,
+    mailbox?: string,
+  ): Promise<ApiResponse<{ message: string }>> {
+    return this.http.put<{ message: string }>('/inbox/folders', {
+      oldPath,
+      newPath,
+      mailbox,
+    });
+  }
+
+  /** Custom folder siler. Sistem klasorleri silinemez. */
+  async deleteFolder(
+    path: string,
+    mailbox?: string,
+  ): Promise<ApiResponse<{ message: string }>> {
+    return this.http.delete<{ message: string }>(
+      `/inbox/folders?path=${encodeURIComponent(path)}${mailbox ? `&mailbox=${encodeURIComponent(mailbox)}` : ''}`,
+    );
+  }
 }
