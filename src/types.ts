@@ -119,6 +119,8 @@ export interface SendSingleParams {
   subject: string;
   domainId: string;
   templateId?: string;
+  /** Template dil kodu (orn. "en", "tr"). Belirtilmezse varsayilan dil kullanilir. */
+  lang?: string;
   html?: string;
   text?: string;
   variables?: Record<string, string>;
@@ -139,6 +141,8 @@ export interface SendBatchParams {
   subject: string;
   domainId: string;
   templateId?: string;
+  /** Template dil kodu (orn. "en", "tr"). Belirtilmezse varsayilan dil kullanilir. */
+  lang?: string;
   html?: string;
   text?: string;
   replyTo?: string;
