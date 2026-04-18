@@ -38,8 +38,19 @@ export interface Domain {
   dmarcVerified: boolean;
   dkimSelector: string;
   dkimPublicKey?: string;
+  bimiLogoUrl?: string | null;
+  bimiVmcUrl?: string | null;
+  bimiVerified: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface BimiConfig {
+  id: string;
+  domain: string;
+  bimiLogoUrl: string | null;
+  bimiVmcUrl: string | null;
+  bimiVerified: boolean;
 }
 
 export interface DnsRecord {

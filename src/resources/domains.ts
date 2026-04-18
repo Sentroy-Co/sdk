@@ -5,6 +5,7 @@ import type {
   DomainWithDns,
   DnsRecord,
   DomainVerification,
+  BimiConfig,
   CreateDomainParams,
   PaginationParams,
 } from '../types';
@@ -34,5 +35,19 @@ export class Domains {
 
   async getDnsRecords(id: string): Promise<ApiResponse<DnsRecord[]>> {
     return this.http.get<DnsRecord[]>(`/domains/${id}/dns-records`);
+  }
+
+  // ── BIMI ──
+
+  async getBimi(id: string): Promise<ApiResponse<BimiConfig>> {
+    return this.http.get<BimiConfig>(`/domains/${id}/bimi`);
+  }
+
+  async updateBimi(id: string, params: { logoUrl: string | null; vmcUrl?: string | null }): Promise<ApiResponse<BimiConfig>> {
+    return this.http.put<BimiConfig>(`/domains/${id}/bimi`, params);
+  }
+
+  async verifyBimi(id: string): Promise<ApiResponse<BimiConfig & { bimiRecord: string | null }>> {
+    return this.http.post<BimiConfig & { bimiRecord: string | null }>(`/domains/${id}/bimi/verify`);
   }
 }
