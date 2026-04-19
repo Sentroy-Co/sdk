@@ -303,6 +303,8 @@ export interface ApiKey {
   name: string;
   scopes: string[];
   domainId: string | null;
+  /** Key'in bagli oldugu company ID (null = legacy master key). */
+  companyId: string | null;
   lastUsed: string | null;
   createdAt: string;
   expiresAt: string | null;
@@ -317,6 +319,8 @@ export interface CreateApiKeyParams {
   name: string;
   scopes: ('send' | 'read' | 'admin')[];
   domainId?: string | null;
+  /** Key'i belirli bir company'ye baglar. NULL/omit = legacy master. */
+  companyId?: string | null;
   expiresAt?: string | null;
 }
 
