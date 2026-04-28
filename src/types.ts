@@ -41,6 +41,12 @@ export interface Domain {
   bimiLogoUrl?: string | null;
   bimiVmcUrl?: string | null;
   bimiVerified: boolean;
+  /**
+   * Catch-all mailbox — set'liyse `*@domain` adreslerine gelen tüm mail bu
+   * adrese yönlendirilir (Postfix virtual_alias_maps üzerinden). null/undefined
+   * = catch-all yok, tanımsız adresler reject olur.
+   */
+  catchAllMailboxEmail?: string | null;
   createdAt: string;
   updatedAt: string;
 }

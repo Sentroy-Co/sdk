@@ -37,6 +37,37 @@ export class Domains {
     return this.http.get<DnsRecord[]>(`/domains/${id}/dns-records`);
   }
 
+  // ── Transfer & catch-all ──
+
+  /**
+   * Domain ownership'ini başka bir company'e devreder. DKIM key/public key
+   * dokunulmaz, sadece domain'in `companyId`'si değişir → caller'ın API
+   * key'i transfer sonrası bu domain'i artık göremez (yeni sahibinin key'i
+   * görür). DNS records'ında değişiklik yok.
+   *
+   * Caller şu anki sahip olmak zorunda (domain scope filter); admin master
+   * key her durumda transfer edebilir.
+   */
+  async transfer(id: string, params: { companyId: string }): Promise<ApiResponse<Domain>> {
+    return this.http.patch<Domain>(`/domains/${id}`, { companyId: params.companyId });
+  }
+
+  /**
+   * Catch-all mailbox set'ler veya kaldırır. `mailboxEmail` null ise catch-all
+   * disable; non-null ise o adres bu domain'in mevcut bir mailbox'ı olmalı
+   * (backend create flow'unda check yok ama mail gelene kadar routing kuralı
+   * yazılmış olur — kullanıcı ayrıca `mailboxes.create` ile anchor'ı yaratmalı
+   * önce).
+   *
+   * Backend Postfix virtual_alias_maps'i regenerate eder; aynı domain'de
+   * specific mailbox + catch-all aynı anda var olabilir (specific kazanır).
+   */
+  async setCatchAll(id: string, params: { mailboxEmail: string | null }): Promise<ApiResponse<Domain>> {
+    return this.http.patch<Domain>(`/domains/${id}`, {
+      catchAllMailboxEmail: params.mailboxEmail,
+    });
+  }
+
   // ── BIMI ──
 
   async getBimi(id: string): Promise<ApiResponse<BimiConfig>> {
