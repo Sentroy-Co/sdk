@@ -163,6 +163,15 @@ export interface SendSingleParams {
   inReplyTo?: string;
   /** RFC 5322 — thread'deki onceki Message-ID'ler */
   references?: string[];
+  /**
+   * Per-send open/click tracking override. Belirtilmezse domain'in
+   * `trackOpens` / `trackClicks` ayari kullanilir. `false` set edilince
+   * tracking pixel + link rewrite skip edilir — invitation, password
+   * reset gibi internal mail'lerde tracking gereksiz, link integrity
+   * kritik (proxy URL'sine dolanmasin).
+   */
+  trackOpens?: boolean;
+  trackClicks?: boolean;
 }
 
 export interface SendBatchParams {
@@ -180,6 +189,9 @@ export interface SendBatchParams {
   attachments?: Attachment[];
   scheduledAt?: string;
   headers?: Record<string, string>;
+  /** Per-send tracking override; bkz. SendSingleParams. */
+  trackOpens?: boolean;
+  trackClicks?: boolean;
 }
 
 export interface SendResult {
