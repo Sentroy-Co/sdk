@@ -123,6 +123,20 @@ export interface Attachment {
   contentType?: string;
 }
 
+/**
+ * Template variable değer tipi.
+ *
+ * Scalar (string/number/boolean) → tekil substitution: `{userName}` → "Ali".
+ * Array (rows) → section iter: `{#products}...{/products}` her item için
+ * tekrar render. Item field'ları outer scope'u ezer (collision'da item kazanır).
+ *
+ * Hem mail-server hem client-sdk aynı serializasyonu paylaşır.
+ */
+export type TemplateScalar = string | number | boolean;
+export type TemplateSectionRow = Record<string, TemplateScalar>;
+export type TemplateVariableValue = TemplateScalar | TemplateSectionRow[];
+export type TemplateVariables = Record<string, TemplateVariableValue>;
+
 export interface SendSingleParams {
   to: string;
   from: string;
@@ -134,7 +148,7 @@ export interface SendSingleParams {
   lang?: string;
   html?: string;
   text?: string;
-  variables?: Record<string, string>;
+  variables?: TemplateVariables;
   replyTo?: string;
   attachments?: Attachment[];
   scheduledAt?: string;
@@ -146,7 +160,7 @@ export interface SendSingleParams {
 }
 
 export interface SendBatchParams {
-  recipients: { to: string; variables?: Record<string, string> }[];
+  recipients: { to: string; variables?: TemplateVariables }[];
   from: string;
   cc?: string | string[];
   subject: string;
