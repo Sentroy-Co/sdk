@@ -69,7 +69,25 @@ export class HttpClient {
         return { data: res as any };
       }
 
-      const json = await res.json() as ApiResponse<T>;
+      // Read body as text first so we can recover from non-JSON
+      // responses (gateway-level 502/503 with plain-text bodies like
+      // "no available server\n", load-balancer error pages, NGINX
+      // default error HTML). Without this guard `res.json()` throws a
+      // bare SyntaxError that bubbles out as a confusing
+      // "Unexpected token 'o', \"no available server\" is not valid JSON"
+      // error to the dashboard.
+      const text = await res.text();
+      let json: ApiResponse<T>;
+      try {
+        json = (text ? JSON.parse(text) : { data: null }) as ApiResponse<T>;
+      } catch {
+        const snippet = text.trim().slice(0, 160);
+        throw new SentroyHttpError(
+          res.status || 502,
+          { error: snippet || `HTTP ${res.status} non-JSON response` },
+          `Mail server returned non-JSON (${res.status}): ${snippet || "empty body"}`,
+        );
+      }
 
       if (!res.ok) {
         throw new SentroyHttpError(res.status, json);
