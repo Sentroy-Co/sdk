@@ -149,4 +149,37 @@ export class Inbox {
       `/inbox/folders?path=${encodeURIComponent(path)}${mailbox ? `&mailbox=${encodeURIComponent(mailbox)}` : ''}`,
     );
   }
+
+  // ── Drafts ──
+
+  /**
+   * Save an in-progress message into the user's IMAP `\\Drafts` folder.
+   * The mail-server builds RFC 822 from the same compose payload the
+   * dashboard would have sent, then `APPEND`s with the `\\Draft` flag
+   * so any IMAP client (Apple Mail, mobile, Outlook) lists it as a
+   * work-in-progress.
+   */
+  async saveDraft(params: {
+    mailbox: string
+    from?: string
+    to?: string | string[]
+    cc?: string | string[]
+    replyTo?: string | string[]
+    subject?: string
+    html?: string
+    text?: string
+    inReplyTo?: string
+    references?: string[]
+    headers?: Record<string, string>
+    attachments?: Array<{
+      filename: string
+      content: string
+      contentType?: string
+    }>
+  }): Promise<ApiResponse<{ message: string; folder: string }>> {
+    return this.http.post<{ message: string; folder: string }>(
+      '/inbox/drafts',
+      params,
+    )
+  }
 }
